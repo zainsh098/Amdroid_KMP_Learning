@@ -48,7 +48,7 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun PostDetailScreen(viewModel: PhotoViewModel =  koinViewModel()) {
+fun PostDetailScreen(viewModel: PhotoViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current // ✅ moved here, inside Composable scope
 
@@ -107,7 +107,7 @@ fun PostDetailScreen(viewModel: PhotoViewModel =  koinViewModel()) {
 
     BaseScreen() {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
-            TopBarComponent()
+            TopBarComponent("Api Data")
             Spacer(Modifier.height(20.dp))
 
             when {
@@ -117,6 +117,7 @@ fun PostDetailScreen(viewModel: PhotoViewModel =  koinViewModel()) {
                         CircularProgressIndicator()
                     }
                 }
+
                 state.error != null -> {
                     Text("Error: ${state.error}")
                 }
@@ -139,7 +140,7 @@ fun PostDetailScreen(viewModel: PhotoViewModel =  koinViewModel()) {
 }
 
 @Composable
-fun TopBarComponent() {
+fun TopBarComponent(title: String) {
     Box(
         modifier = Modifier
             .height(72.dp)
@@ -153,7 +154,7 @@ fun TopBarComponent() {
                 .padding(start = 16.dp)
         )
         Text(
-            text = "Api Data",
+            text = title,
             style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier.align(Alignment.Center)
         )
@@ -164,7 +165,7 @@ fun TopBarComponent() {
 @Preview
 @Composable
 fun previewTopBar() {
-    TopBarComponent()
+    TopBarComponent("Api Data")
 }
 
 

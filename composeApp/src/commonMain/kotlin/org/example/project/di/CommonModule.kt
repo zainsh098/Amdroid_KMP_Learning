@@ -11,10 +11,11 @@ import org.koin.dsl.module
 // Created by Zain Shakoor
 // on 7/24/2025
 
-
 val sharedModule = module {
     single { KtorClient.httpClient }
     single { PostApi(get()) }
     single<PhotoRepository> { PhotoRepoImpl(get()) }
     viewModelOf(::PhotoViewModel)
+
+
 }
