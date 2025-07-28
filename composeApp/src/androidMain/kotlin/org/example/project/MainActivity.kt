@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.example.project.viewmodel.PhotoViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -15,7 +17,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            PostDetailScreen(photoViewModel)
+//            PostDetailScreen(photoViewModel)
+
+            NavGraph()
+
         }
     }
 }

@@ -1,6 +1,7 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,9 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.example.project.component.BaseScreen
+import androidx.navigation.NavController
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.item1
+import org.example.project.component.BaseScreen
 import org.example.project.component.BaseSpacer
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -38,11 +40,12 @@ import org.jetbrains.compose.resources.painterResource
 // Created by Zain Shakoor
 // on 7/25/2025
 
-
 @Composable
-fun RelatedProductScreen() {
+fun RelatedProductScreen(navController: NavController) {
     BaseScreen {
         Column(modifier = Modifier.fillMaxSize()) {
+            BaseSpacer(height = 10.dp)
+
             TopBarComponent(" Related Products")
             BaseSpacer(height = 20.dp)
             Text(
@@ -51,9 +54,9 @@ fun RelatedProductScreen() {
                 fontSize = 23.sp,
                 modifier = Modifier.padding(start = 15.dp)
             )
-            BaseSpacer(height = 25.dp)
-            ProductCardSliderListHorizontal()
-            BaseSpacer(height = 25.dp)
+            BaseSpacer(height = 10.dp)
+            ProductCardSliderListHorizontal(navController = navController)
+            BaseSpacer(height = 10.dp)
             Text(
                 "Customer Also Bought",
                 style = TextStyle(fontWeight = FontWeight.Bold),
@@ -67,12 +70,17 @@ fun RelatedProductScreen() {
 
 
 @Composable
-fun ProductCardSliderListHorizontal() {
+fun ProductCardSliderListHorizontal(navController: NavController) {
     LazyRow {
         contentPadding(start = 10.dp, end = 10.dp)
         items(10)
+
         {
-            ProductCardSlider()
+            ProductCardSlider({
+
+                navController.navigate("productDetails")
+
+            })
         }
     }
 }
@@ -84,27 +92,32 @@ fun ProductCardSliderListVertical() {
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
 
-    ) {
+        ) {
         contentPadding(start = 10.dp, end = 10.dp)
         items(10)
         {
-            ProductCardSlider()
+            ProductCardSlider(
+                {}
+            )
         }
     }
 }
 
 
 @Composable
-fun ProductCardSlider() {
+fun ProductCardSlider(onTap: () -> Unit) {
     Column(
         modifier = Modifier
             .wrapContentWidth()
-            .padding(20.dp), // Padding from all sides
+            .padding(start = 20.dp, end = 20.dp), // Padding from all sides
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
+                .clickable {
+                    onTap()
+                }
                 .size(width = 170.dp, height = 200.dp),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -138,18 +151,18 @@ fun ProductCardSlider() {
 }
 
 
-@Preview
-@Composable
-fun previewPreviewRelatedScreen() {
-    RelatedProductScreen()
-}
-
-
-@Preview
-@Composable
-fun previewProductCardSlider() {
-    ProductCardSlider()
-}
+//@PreviewP
+//@Composable
+//fun previewPreviewRelatedScreen(navController: NavController) {
+//    RelatedProductScreen(navController)
+//}
+//
+//
+//@Preview
+//@Composable
+//fun previewProductCardSlider(navController: NavController) {
+//    ProductCardSlider({})
+//}
 
 
 @Preview
@@ -160,12 +173,12 @@ fun previewProductCardSliderVertical() {
 }
 
 
-@Preview
-@Composable
-fun previewProductList() {
-    ProductCardSliderListHorizontal()
-
-}
+//@Preview
+//@Composable
+//fun previewProductList() {
+//    ProductCardSliderListHorizontal()
+//
+//}
 
 @Composable
 fun getDrawableResource(drawable: DrawableResource): Painter {

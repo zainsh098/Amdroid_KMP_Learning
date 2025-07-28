@@ -46,7 +46,8 @@ fun ProductDetailScreen() {
             TopBarComponent("Product")
             BaseSpacer(height = 10.dp)
             ProductImageWithTitlesDesc()
-
+            BaseSpacer(height = 10.dp)
+            ProductReviewCount()
 
         }
 
@@ -104,59 +105,77 @@ fun ProductReviewCount(modifier: Modifier = Modifier) {
     )
     val total = dummyRatings.values.sum()
 
-    Column(modifier = modifier.padding(16.dp)) {
-        // Rating value
-        Text(
-            text = "4.5",
-            style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold)
-        )
-        Spacer(Modifier.height(4.dp))
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        // Left Column: 4.5 rating, stars, and review count
+        Column(
+            modifier = Modifier.weight(0.3f),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "4.5",
+                style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(start = 8.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            StarRating(rating = 5, onRatingChanged = {}, modifier = Modifier.padding(start = 8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "1,234 reviews",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
 
-        // Star visuals
-        StarRating(rating = 5, onRatingChanged = {}) // You can adjust based on average
+        Spacer(modifier = Modifier.width(16.dp))
 
-        Spacer(Modifier.height(8.dp))
+        // Right Column: Progress Bars
+        Column(
+            modifier = Modifier.weight(0.7f)
+        ) {
+            dummyRatings.toSortedMap(compareByDescending { it }).forEach { (stars, count) ->
+                val percentage = count / total.toFloat()
 
-        // Reviews count
-        Text(
-            text = "1,234 reviews",
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium)
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Ratings breakdown
-        dummyRatings.toSortedMap(compareByDescending { it }).forEach { (stars, count) ->
-            val percentage = count / total.toFloat()
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                Text(
-                    text = "$stars",
-                    modifier = Modifier.width(24.dp),
-                    fontSize = 14.sp
-                )
-                LinearProgressIndicator(
-                    progress = percentage,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .weight(1f)
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(4.dp)),
-                    color = Color(0xFFFFC107),
-                    trackColor = Color(0xFFE0E0E0)
-                )
-                Text(
-                    text = "${(percentage * 100).toInt()}%",
-                    modifier = Modifier.padding(start = 8.dp),
-                    fontSize = 12.sp
-                )
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "$stars",
+                        fontSize = 14.sp,
+                        modifier = Modifier.width(20.dp)
+                    )
+//                    Icon(
+//                        imageVector = Icons.Filled.Star,
+//                        contentDescription = null,
+//                        tint = Color(0xFFFFC107),
+//                        modifier = Modifier.size(16.dp)
+//                    )
+                    LinearProgressIndicator(
+                        progress = percentage,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(8.dp)
+                            .padding(horizontal = 8.dp)
+                            .clip(RoundedCornerShape(4.dp)),
+                        color = Color(0xff171212),
+                        trackColor = Color(0xffE3DEDE)
+                    )
+                    Text(
+                        text = "${(percentage * 100).toInt()}%",
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun StarRating(
@@ -165,18 +184,16 @@ fun StarRating(
     modifier: Modifier = Modifier,
     totalStars: Int = 5
 ) {
-
-
     Row {
 
         for (i in 1..totalStars) {
             Icon(
                 contentDescription = "",
                 imageVector = if (i <= rating) Icons.Filled.Star else Icons.Outlined.Star,
-                tint = Color(0xFFFFD700), // gold
+                tint = Color(0xff171212), // gold
                 modifier = Modifier
                     .size(32.dp)
-                    .padding(start = 15.dp)
+                    .padding(start = 5.dp)
                     .clickable { onRatingChanged(i) }
             )
         }
@@ -196,7 +213,6 @@ fun ProductRatingProgressbar(
         for (i in 5 downTo 1) {
             val count = ratingCounts[i] ?: 0
             val progress = count / maxCount.toFloat()
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -208,7 +224,6 @@ fun ProductRatingProgressbar(
                     modifier = Modifier.width(24.dp),
                     style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 )
-
                 LinearProgressIndicator(
                     progress = progress.coerceIn(0f, 1f),
                     modifier = Modifier
@@ -219,9 +234,7 @@ fun ProductRatingProgressbar(
                     trackColor = Color(0XFFE3DEDE)
                 )
 
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 Text(
                     text = count.toString(),
                     style = TextStyle(fontSize = 12.sp)
