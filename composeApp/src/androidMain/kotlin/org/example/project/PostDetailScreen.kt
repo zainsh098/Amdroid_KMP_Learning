@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.zain.kmplearningsession.android.component.BaseScreen
+import org.example.project.component.BaseScreen
 import org.example.project.effect.PhotoEffects
 import org.example.project.intent.PhotoIntent
 import org.example.project.viewmodel.PhotoViewModel
@@ -168,19 +168,16 @@ fun previewTopBar() {
     TopBarComponent("Api Data")
 }
 
-
 //@Preview
 //@Composable
 //fun previewPostScreen() {
 //    PostDetailScreen()
 //}
 
-
 @Composable
 fun DetailCard(
     title: String, id: String, albumId: String, imageRes: String
-) {
-    Row(
+) { Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
