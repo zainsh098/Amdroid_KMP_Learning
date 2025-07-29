@@ -7,3 +7,9 @@ sealed class PhotoEffects {
     data class ShowToast(val mesg: String) : PhotoEffects()
     data class ShowError(val mesg: String) : PhotoEffects()
 }
+
+
+sealed class ProductEffects{
+    data class  ShowToast(val mesg: String): ProductEffects()
+    data class  ShowError(val mesgError: String): ProductEffects()
+}

@@ -20,7 +20,6 @@ class PhotoViewModel(private val photoRepository: PhotoRepository) : ViewModel()
     private val _state = MutableStateFlow(PhotoUiState())
     val state: StateFlow<PhotoUiState> = _state
 
-
     private val _effect = MutableSharedFlow<PhotoEffects>()
     val effect = _effect.asSharedFlow()
 
@@ -37,17 +36,14 @@ class PhotoViewModel(private val photoRepository: PhotoRepository) : ViewModel()
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
-                val photos = photoRepository.getAllPhotoDetials()
+                val photos = photoRepository.getAllPhotoDetails()
                 _state.value = _state.value.copy(photos = photos, isLoading = false, error = null)
                 _effect.emit(PhotoEffects.ShowToast("Data is Loaded SucccesFully"))
             } catch (e: Exception) {
                 _state.value = _state.value.copy(isLoading = false, error = e.message)
                 _effect.emit(PhotoEffects.ShowError("Something Went Wrong"))
             }
-
         }
-
-
     }
 
 

@@ -26,9 +26,7 @@ object KtorClient {
                 }
             }
             level = LogLevel.ALL
-        }
-
-    }
+        } }
 
 
 }

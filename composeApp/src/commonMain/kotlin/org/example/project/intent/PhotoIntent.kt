@@ -6,3 +6,9 @@ package org.example.project.intent
 sealed class PhotoIntent {
     data object loadPhotos : PhotoIntent()
 }
+
+
+sealed class ProductIntent {
+    data object LoadProductandDetails : ProductIntent()
+//    data object loadProductsDetails : ProductIntent()
+}

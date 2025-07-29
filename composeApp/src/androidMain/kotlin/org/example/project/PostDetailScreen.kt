@@ -63,7 +63,6 @@ fun PostDetailScreen(viewModel: PhotoViewModel = koinViewModel()) {
                 is PhotoEffects.ShowError -> {
                     Toast.makeText(context, effects.mesg, Toast.LENGTH_LONG).show()
 
-
                 }
 
                 is PhotoEffects.ShowToast -> {
