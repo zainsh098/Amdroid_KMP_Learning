@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -53,6 +52,7 @@ import org.example.project.effect.ProductEffects
 import org.example.project.intent.ProductIntent
 import org.example.project.model.Product
 import org.example.project.viewmodel.ProductViewModel
+import org.example.project.viewmodel.SharedViewModel
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.androidx.compose.koinViewModel
@@ -63,8 +63,10 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RelatedProductScreen(
     navController: NavController,
-    productViewModel: ProductViewModel = koinViewModel()
-) {
+    productViewModel: ProductViewModel = koinViewModel(),
+    sharedProductViewModel: SharedViewModel,
+
+    ) {
 
     val stateScreen by productViewModel.productUiState.collectAsState()
     val eff = productViewModel.effects.receiveAsFlow()
@@ -108,7 +110,11 @@ fun RelatedProductScreen(
                 modifier = Modifier.padding(start = 15.dp)
             )
             BaseSpacer(height = 10.dp)
-            Row(modifier = Modifier.wrapContentHeight().wrapContentWidth()) {
+            Row(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .wrapContentWidth()
+            ) {
                 when {
 
                     stateScreen.isLoading -> {
@@ -126,8 +132,10 @@ fun RelatedProductScreen(
                         if (stateScreen.products.isNotEmpty()) {
                             ProductCardSliderListHorizontal(
                                 navController = navController,
-                                products = stateScreen.products
+                                products = stateScreen.products,
+                                sharedViewModel = sharedProductViewModel // ✅ Pass shared ViewModel
                             )
+
                         }
                     }
 
@@ -153,18 +161,19 @@ fun RelatedProductScreen(
 @Composable
 fun ProductCardSliderListHorizontal(
     navController: NavController,
-    products: List<Product>
+    products: List<Product>,
+    sharedViewModel: SharedViewModel
 ) {
-    LazyRow {
-        contentPadding(start = 10.dp, end = 10.dp)
-        items(products.size)
+    val context = LocalContext.current
 
-        { items ->
-            val item = products[items]
+    LazyRow {
+        items(products.size) { index ->
+            val item = products[index]
             ProductCardSlider(
                 onTap = {
+                    sharedViewModel.selectedProduct = item // ✅ Now this works
+                    Toast.makeText(context, "Selected: ${item.title}", Toast.LENGTH_SHORT).show()
                     navController.navigate("productDetails")
-
                 },
                 title = item.title,
                 desc = item.description,
@@ -221,8 +230,9 @@ fun ProductCardSlider(
                 .border(
                     width = 1.dp,
                     color = Color.Transparent, // or any other color
-                    shape = RoundedCornerShape(10.dp)
-                )               .background(Color.Gray)
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .background(Color(0x1E9D9797))
                 .fillMaxWidth(),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -249,12 +259,12 @@ fun ProductCardSlider(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewRelatedScreen() {
-    val navController = rememberNavController()
-    RelatedProductScreen(navController)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewRelatedScreen() {
+//    val navController = rememberNavController()
+//    RelatedProductScreen(navController)
+//}
 
 //
 //

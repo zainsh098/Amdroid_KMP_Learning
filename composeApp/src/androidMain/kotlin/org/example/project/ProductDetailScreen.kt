@@ -2,6 +2,7 @@ package org.example.project
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -27,55 +32,72 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import kotlinproject.composeapp.generated.resources.Res
 import kotlinproject.composeapp.generated.resources.item1
 import org.example.project.component.BaseScreen
 import org.example.project.component.BaseSpacer
-import org.jetbrains.compose.resources.painterResource
+import org.example.project.model.Product
+import org.example.project.viewmodel.SharedViewModel
 
 // Created by Zain Shakoor
 // on 7/28/2025
 
 
 @Composable
-fun ProductDetailScreen() {
+fun ProductDetailScreen(sharedProductViewModel: SharedViewModel) {
+    val product = sharedProductViewModel.selectedProduct
+    println(product)
+
+    if (product == null) {
+        // You can show a loading, error, or navigate back
+        BaseScreen {
+            Column(modifier = Modifier.fillMaxSize()) {
+                TopBarComponent("Product")
+                Text(
+                    "No product selected.",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+        return
+    }
+
     BaseScreen {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBarComponent("Product")
             BaseSpacer(height = 10.dp)
-            ProductImageWithTitlesDesc()
+            ProductImageWithTitlesDesc(product = product)
             BaseSpacer(height = 10.dp)
             ProductReviewCount()
-
         }
-
-
     }
 }
 
 
 @Composable
-fun ProductImageWithTitlesDesc() {
+fun ProductImageWithTitlesDesc(product: Product) {
     Image(
         modifier = Modifier
             .fillMaxWidth()
             .height(218.dp),
-        painter = painterResource(Res.drawable.item1),
+        painter = rememberAsyncImagePainter(product.images?.firstOrNull()),
         contentScale = ContentScale.FillWidth,
         contentDescription = ""
     )
 
     BaseSpacer(height = 20.dp)
     Text(
-        text = "L'Oreal Paris Voluminous Lash\nParadise Mascara",
+        text = product.title,
         style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
         modifier = Modifier.padding(start = 15.dp)
     )
     BaseSpacer(height = 20.dp)
     Text(
-        text = "L'Oreal Paris • Mascara",
+        text = product.description,
         style = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
@@ -85,7 +107,7 @@ fun ProductImageWithTitlesDesc() {
     )
     BaseSpacer(height = 20.dp)
     Text(
-        text = "\$10.99",
+        text = "$${product.price}",
         style = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
@@ -269,12 +291,61 @@ fun AverageRatingBar(
     }
 }
 
-
-@Preview
 @Composable
-fun previewProductDetail() {
-    ProductDetailScreen()
+fun RatingCard() {
+
+    Column(){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Image(
+                painter = org.jetbrains.compose.resources.painterResource(Res.drawable.item1),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+            )
+            BaseSpacer(width = 10.dp)
+            Column {
+                Text(
+                    text = "count.toString()",
+                    modifier = Modifier.padding(top = 10.dp),
+                    style = TextStyle(fontSize = 12.sp)
+                )
+                Text(
+                    text = "2 months ago",
+                    style = TextStyle(fontSize = 12.sp)
+                )
+            }
+
+        }
+        StarRating(4, {})
+        Text(
+            text = LoremIpsum(words = 16).values.first(),
+            style = TextStyle(fontSize = 12.sp))
+
+        Row{
+            Icon(Icons.Filled.ThumbUp, contentDescription = "thump up", Modifier.size(15.dp))
+                    BaseSpacer(width = 20.dp)
+            Icon(Icons.Filled.ThumbUp, contentDescription = "thump up", Modifier.size(15.dp))
+            Icon(Icons.Default.ArrowDropDown)
+
+        }
+    }
+
+
+
 }
+
+
+//@Preview
+//@Composable
+//fun previewProductDetail() {
+//    ProductDetailScreen()
+//}
 
 @Preview
 @Composable
@@ -313,3 +384,10 @@ fun previewProductAverageRatingBar() {
     )
 }
 
+
+@Preview
+@Composable
+fun previewReviewCard() {
+    RatingCard()
+
+}

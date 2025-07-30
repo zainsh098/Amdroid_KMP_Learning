@@ -9,6 +9,7 @@ import org.example.project.repo.ProductRepoImpl
 import org.example.project.repo.ProductRepository
 import org.example.project.viewmodel.PhotoViewModel
 import org.example.project.viewmodel.ProductViewModel
+import org.example.project.viewmodel.SharedViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -23,5 +24,6 @@ val sharedModule = module {
     single { ProductApi(get()) }
     single<ProductRepository> { ProductRepoImpl(get()) }
     viewModelOf(::ProductViewModel)
+    viewModelOf(::SharedViewModel)
 
 }
