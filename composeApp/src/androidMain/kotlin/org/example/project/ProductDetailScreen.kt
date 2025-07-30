@@ -331,7 +331,6 @@ fun RatingCard() {
             Icon(Icons.Filled.ThumbUp, contentDescription = "thump up", Modifier.size(15.dp))
                     BaseSpacer(width = 20.dp)
             Icon(Icons.Filled.ThumbUp, contentDescription = "thump up", Modifier.size(15.dp))
-            Icon(Icons.Default.ArrowDropDown)
 
         }
     }
